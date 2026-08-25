@@ -387,93 +387,123 @@ render: |
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 127 # Battery Grid Charging Start (set to minsoc)
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 127 # Battery Grid Charging Start (set to minsoc)
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 166 # Program 1 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 166 # Program 1 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 167 # Program 2 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 167 # Program 2 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 168 # Program 3 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 168 # Program 3 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 169 # Program 4 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 169 # Program 4 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 170 # Program 5 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 170 # Program 5 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 171 # Program 6 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 171 # Program 6 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: 1 # enabled
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 130 # Battery Grid Charging
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 130 # Battery Grid Charging
+                type: writemultiple
+                decode: uint16
         - source: const
           value: 0x00FF # Week, enable TOU
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 146 # Time of Use
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 146 # Time of Use
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .maxdischargecurrent }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 109 # Battery Max Discharging Current
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 109 # Battery Max Discharging Current
+                type: writemultiple
+                decode: uint16
     - case: 2 # hold - prevent discharge
       set:
         source: sequence
@@ -481,84 +511,111 @@ render: |
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 127 # Battery Grid Charging Start (set to minsoc)
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 127 # Battery Grid Charging Start (set to minsoc)
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 166 # Program 1 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 166 # Program 1 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 167 # Program 2 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 167 # Program 2 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 168 # Program 3 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 168 # Program 3 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 169 # Program 4 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 169 # Program 4 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 170 # Program 5 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 170 # Program 5 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .minsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 171 # Program 6 SOC
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 171 # Program 6 SOC
+                type: writemultiple
+                decode: uint16
         - source: const
           value: 0x00FF # Week, enable TOU
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 146 # Time of Use
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 146 # Time of Use
+                type: writemultiple
+                decode: uint16
         - source: const
           value: 0
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 109 # Battery Max Discharging Current
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 109 # Battery Max Discharging Current
+                type: writemultiple
+                decode: uint16
     - case: 3 # charge - enable grid charging
       set:
         source: sequence
@@ -566,48 +623,63 @@ render: |
         - source: const
           value: {{ .gridchargecurrent }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 128 # Battery Grid Charging Current
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 128 # Battery Grid Charging Current
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .maxsoc }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 127 # Battery Grid Charging Start (SOC target)
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 127 # Battery Grid Charging Start (SOC target)
+                type: writemultiple
+                decode: uint16
         - source: const
           value: 1 # enabled
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 130 # Battery Grid Charging
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 130 # Battery Grid Charging
+                type: writemultiple
+                decode: uint16
         - source: const
           value: 0x0000 # Disabled, ignore TOU schedule
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 146 # Time of Use
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 146 # Time of Use
+                type: writemultiple
+                decode: uint16
         - source: const
           value: {{ .maxdischargecurrent }}
           set:
-            source: modbus
-            {{- include "modbus" . | indent 10 }}
-            register:
-              address: 109 # Battery Max Discharging Current
-              type: writemultiple
-              decode: uint16
+            source: ignore
+            error: "modbus: response data size '1' does not match count '4'"
+            set:
+              source: modbus
+              {{- include "modbus" . | indent 12 }}
+              register:
+                address: 109 # Battery Max Discharging Current
+                type: writemultiple
+                decode: uint16
     default:
       source: error
       error: ErrNotAvailable
