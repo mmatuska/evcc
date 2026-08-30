@@ -1217,7 +1217,7 @@ func configureModbusProxy(conf *[]globalconfig.ModbusProxy) error {
 			return err
 		}
 
-		if err = modbus.StartProxy(cfg.Port, cfg.Settings, mode); err != nil {
+		if err = modbus.StartProxy(cfg.Port, cfg.Settings, mode, cfg.TolerateMalformedFc16Echo); err != nil {
 			return err
 		}
 	}

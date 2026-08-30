@@ -12,7 +12,7 @@ import (
 	"github.com/evcc-io/evcc/util/sponsor"
 )
 
-func StartProxy(port int, config modbus.Settings, readOnly ReadOnlyMode) error {
+func StartProxy(port int, config modbus.Settings, readOnly ReadOnlyMode, tolerateMalformedFc16Echo bool) error {
 	conn, err := modbus.NewConnection(context.Background(), config.URI, config.Device, config.Comset, config.Baudrate, config.Protocol(), config.ID)
 	if err != nil {
 		return err
@@ -23,9 +23,10 @@ func StartProxy(port int, config modbus.Settings, readOnly ReadOnlyMode) error {
 	}
 
 	h := &handler{
-		log:      util.NewLogger(fmt.Sprintf("proxy-%d", port)),
-		readOnly: readOnly,
-		conn:     conn,
+		log:                       util.NewLogger(fmt.Sprintf("proxy-%d", port)),
+		readOnly:                  readOnly,
+		conn:                      conn,
+		tolerateMalformedFc16Echo: tolerateMalformedFc16Echo,
 	}
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", port))

@@ -115,16 +115,20 @@ func TestReadCoils(t *testing.T) {
 	}
 }
 
-func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
-	downstreamListener, err := net.Listen("tcp", "localhost:0")
+// startMalformedFc16DownstreamServer starts a TCP server that replies to a single FC16
+// (WriteMultipleRegisters) request with a truncated (malformed) response.
+func startMalformedFc16DownstreamServer(t *testing.T) (addr string, done <-chan struct{}) {
+	t.Helper()
+
+	l, err := net.Listen("tcp", "localhost:0")
 	require.NoError(t, err)
-	defer downstreamListener.Close()
+	t.Cleanup(func() { l.Close() })
 
-	done := make(chan struct{})
+	ch := make(chan struct{})
 	go func() {
-		defer close(done)
+		defer close(ch)
 
-		conn, err := downstreamListener.Accept()
+		conn, err := l.Accept()
 		if err != nil {
 			return
 		}
@@ -143,7 +147,7 @@ func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
 		resp := []byte{
 			header[0], header[1], // transaction id
 			header[2], header[3], // protocol id
-			0x00, 0x03, // malformed length
+			0x00, 0x03, // malformed length (only 3 bytes follow instead of 4)
 			header[6],  // unit id
 			payload[0], // function code
 			0x00,       // malformed short payload
@@ -151,17 +155,24 @@ func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
 		_, _ = conn.Write(resp)
 	}()
 
+	return l.Addr().String(), ch
+}
+
+func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
+	downstreamAddr, done := startMalformedFc16DownstreamServer(t)
+
 	// proxy server
 	proxyListener, err := net.Listen("tcp", "localhost:0")
 	require.NoError(t, err)
 	defer proxyListener.Close()
 
-	downstreamConn, err := modbus.NewConnection(t.Context(), downstreamListener.Addr().String(), "", "", 0, modbus.Tcp, 1)
+	downstreamConn, err := modbus.NewConnection(t.Context(), downstreamAddr, "", "", 0, modbus.Tcp, 1)
 	require.NoError(t, err)
 
 	proxy, _ := mbserver.New(&handler{
-		log:  util.NewLogger("foo"),
-		conn: downstreamConn,
+		log:                       util.NewLogger("foo"),
+		conn:                      downstreamConn,
+		tolerateMalformedFc16Echo: true,
 	})
 	require.NoError(t, proxy.Start(proxyListener))
 	defer func() { _ = proxy.Stop() }()
@@ -172,6 +183,34 @@ func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
 	b, err := clientConn.WriteMultipleRegisters(0x007f, 1, []byte{0x00, 0x01})
 	require.NoError(t, err)
 	assert.Equal(t, []byte{0x00, 0x01}, b)
+
+	<-done
+}
+
+func TestWriteMultipleRegistersMalformedDownstreamResponseNotTolerated(t *testing.T) {
+	downstreamAddr, done := startMalformedFc16DownstreamServer(t)
+
+	// proxy server
+	proxyListener, err := net.Listen("tcp", "localhost:0")
+	require.NoError(t, err)
+	defer proxyListener.Close()
+
+	downstreamConn, err := modbus.NewConnection(t.Context(), downstreamAddr, "", "", 0, modbus.Tcp, 1)
+	require.NoError(t, err)
+
+	proxy, _ := mbserver.New(&handler{
+		log:                       util.NewLogger("foo"),
+		conn:                      downstreamConn,
+		tolerateMalformedFc16Echo: false,
+	})
+	require.NoError(t, proxy.Start(proxyListener))
+	defer func() { _ = proxy.Stop() }()
+
+	clientConn, err := modbus.NewConnection(t.Context(), proxyListener.Addr().String(), "", "", 0, modbus.Tcp, 1)
+	require.NoError(t, err)
+
+	_, err = clientConn.WriteMultipleRegisters(0x007f, 1, []byte{0x00, 0x01})
+	assert.Error(t, err)
 
 	<-done
 }

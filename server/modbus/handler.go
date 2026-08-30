@@ -12,9 +12,10 @@ import (
 )
 
 type handler struct {
-	log      *util.Logger
-	readOnly ReadOnlyMode
-	conn     *modbus.Connection
+	log                      *util.Logger
+	readOnly                 ReadOnlyMode
+	conn                     *modbus.Connection
+	tolerateMalformedFc16Echo bool
 }
 
 func bytesAsUint16(b []byte) []uint16 {
@@ -159,7 +160,7 @@ func (h *handler) HandleHoldingRegisters(req *mbserver.HoldingRegistersRequest) 
 		h.log.TRACE.Printf("write holdings: id %d addr %d qty %d val %0x", req.UnitId, req.Addr, req.Quantity, asBytes(req.Args))
 		b, err := h.conn.Clone(req.UnitId).WriteMultipleRegisters(req.Addr, req.Quantity, asBytes(req.Args))
 
-		if modbus.IsWriteMultipleRegistersResponseSizeError(err) {
+		if h.tolerateMalformedFc16Echo && modbus.IsWriteMultipleRegistersResponseSizeError(err) {
 			h.log.TRACE.Printf("write multiple holding: ignoring malformed FC16 response after write: %v", err)
 			err = nil
 		}
