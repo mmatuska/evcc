@@ -116,64 +116,64 @@ func TestReadCoils(t *testing.T) {
 }
 
 func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
-		downstreamListener, err := net.Listen("tcp", "localhost:0")
-		require.NoError(t, err)
-		defer downstreamListener.Close()
+	downstreamListener, err := net.Listen("tcp", "localhost:0")
+	require.NoError(t, err)
+	defer downstreamListener.Close()
 
-		done := make(chan struct{})
-		go func() {
-			defer close(done)
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
 
-			conn, err := downstreamListener.Accept()
-			if err != nil {
-				return
-			}
-			defer conn.Close()
+		conn, err := downstreamListener.Accept()
+		if err != nil {
+			return
+		}
+		defer conn.Close()
 
-			header := make([]byte, 7)
-			if _, err := io.ReadFull(conn, header); err != nil {
-				return
-			}
+		header := make([]byte, 7)
+		if _, err := io.ReadFull(conn, header); err != nil {
+			return
+		}
 
-			payload := make([]byte, int(binary.BigEndian.Uint16(header[4:6]))-1)
-			if _, err := io.ReadFull(conn, payload); err != nil {
-				return
-			}
+		payload := make([]byte, int(binary.BigEndian.Uint16(header[4:6]))-1)
+		if _, err := io.ReadFull(conn, payload); err != nil {
+			return
+		}
 
-			resp := []byte{
-				header[0], header[1], // transaction id
-				header[2], header[3], // protocol id
-				0x00, 0x03, // malformed length
-				header[6],  // unit id
-				payload[0], // function code
-				0x00,       // malformed short payload
-			}
-			_, _ = conn.Write(resp)
-		}()
+		resp := []byte{
+			header[0], header[1], // transaction id
+			header[2], header[3], // protocol id
+			0x00, 0x03, // malformed length
+			header[6],  // unit id
+			payload[0], // function code
+			0x00,       // malformed short payload
+		}
+		_, _ = conn.Write(resp)
+	}()
 
-		// proxy server
-		proxyListener, err := net.Listen("tcp", "localhost:0")
-		require.NoError(t, err)
-		defer proxyListener.Close()
+	// proxy server
+	proxyListener, err := net.Listen("tcp", "localhost:0")
+	require.NoError(t, err)
+	defer proxyListener.Close()
 
-		downstreamConn, err := modbus.NewConnection(t.Context(), downstreamListener.Addr().String(), "", "", 0, modbus.Tcp, 1)
-		require.NoError(t, err)
+	downstreamConn, err := modbus.NewConnection(t.Context(), downstreamListener.Addr().String(), "", "", 0, modbus.Tcp, 1)
+	require.NoError(t, err)
 
-		proxy, _ := mbserver.New(&handler{
-			log:  util.NewLogger("foo"),
-			conn: downstreamConn,
-		})
-		require.NoError(t, proxy.Start(proxyListener))
-		defer func() { _ = proxy.Stop() }()
+	proxy, _ := mbserver.New(&handler{
+		log:  util.NewLogger("foo"),
+		conn: downstreamConn,
+	})
+	require.NoError(t, proxy.Start(proxyListener))
+	defer func() { _ = proxy.Stop() }()
 
-		clientConn, err := modbus.NewConnection(t.Context(), proxyListener.Addr().String(), "", "", 0, modbus.Tcp, 1)
-		require.NoError(t, err)
+	clientConn, err := modbus.NewConnection(t.Context(), proxyListener.Addr().String(), "", "", 0, modbus.Tcp, 1)
+	require.NoError(t, err)
 
-		b, err := clientConn.WriteMultipleRegisters(0x007f, 1, []byte{0x00, 0x01})
-		require.NoError(t, err)
-		assert.Equal(t, []byte{0x00, 0x01}, b)
+	b, err := clientConn.WriteMultipleRegisters(0x007f, 1, []byte{0x00, 0x01})
+	require.NoError(t, err)
+	assert.Equal(t, []byte{0x00, 0x01}, b)
 
-		<-done
+	<-done
 }
 
 type echoHandler struct {
