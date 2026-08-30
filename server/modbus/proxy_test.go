@@ -190,7 +190,7 @@ func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
 
 func TestWriteMultipleRegistersMalformedDownstreamResponseNotTolerated(t *testing.T) {
 	downstreamAddr, done := startMalformedFc16DownstreamServer(t)
-	cfg := modbus.Settings{}
+	cfg := modbus.Settings{TolerateMalformedFc16Echo: false}
 
 	// proxy server
 	proxyListener, err := net.Listen("tcp", "localhost:0")
