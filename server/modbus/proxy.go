@@ -23,9 +23,10 @@ func StartProxy(port int, config modbus.Settings, readOnly ReadOnlyMode) error {
 	}
 
 	h := &handler{
-		log:      util.NewLogger(fmt.Sprintf("proxy-%d", port)),
-		readOnly: readOnly,
-		conn:     conn,
+		log:                       util.NewLogger(fmt.Sprintf("proxy-%d", port)),
+		readOnly:                  readOnly,
+		conn:                      conn,
+		tolerateMalformedFc16Echo: config.TolerateMalformedFc16Echo,
 	}
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", port))

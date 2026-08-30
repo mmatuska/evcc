@@ -33,14 +33,15 @@ type TcpSettings struct {
 
 // Settings contains the ModBus settings
 type Settings struct {
-	ID        uint8  `json:"id,omitempty" yaml:",omitempty"`
-	SubDevice int    `json:"subdevice,omitempty" yaml:",omitempty"`
-	URI       string `json:"uri,omitempty" yaml:",omitempty"`
-	Device    string `json:"device,omitempty" yaml:",omitempty"`
-	Comset    string `json:"comset,omitempty" yaml:",omitempty"`
-	Baudrate  int    `json:"baudrate,omitempty" yaml:",omitempty"`
-	UDP       bool   `json:"udp,omitempty" yaml:",omitempty"`
-	RTU       *bool  `json:"rtu,omitempty" yaml:",omitempty"`
+	ID                        uint8  `json:"id,omitempty" yaml:",omitempty"`
+	SubDevice                 int    `json:"subdevice,omitempty" yaml:",omitempty"`
+	URI                       string `json:"uri,omitempty" yaml:",omitempty"`
+	Device                    string `json:"device,omitempty" yaml:",omitempty"`
+	Comset                    string `json:"comset,omitempty" yaml:",omitempty"`
+	Baudrate                  int    `json:"baudrate,omitempty" yaml:",omitempty"`
+	UDP                       bool   `json:"udp,omitempty" yaml:",omitempty"`
+	RTU                       *bool  `json:"rtu,omitempty" yaml:",omitempty"`
+	TolerateMalformedFc16Echo bool   `json:"tolerateMalformedFc16Echo,omitempty" yaml:",omitempty"`
 }
 
 // Protocol identifies the wire format from the RTU setting
