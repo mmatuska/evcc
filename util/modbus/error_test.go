@@ -2,8 +2,10 @@ package modbus
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
+	gridx "github.com/grid-x/modbus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,12 +17,26 @@ func TestIsWriteMultipleRegistersResponseSizeError(t *testing.T) {
 	}{
 		{
 			name: "matching error",
-			err:  errors.New("modbus: response data size '1' does not match count '4'"),
+			err: &gridx.DataSizeError{
+				ExpectedBytes: 4,
+				ActualBytes:   1,
+			},
+			want: true,
+		},
+		{
+			name: "wrapped matching error",
+			err: fmt.Errorf("wrapped: %w", &gridx.DataSizeError{
+				ExpectedBytes: 4,
+				ActualBytes:   1,
+			}),
 			want: true,
 		},
 		{
 			name: "different count",
-			err:  errors.New("modbus: response data size '1' does not match count '6'"),
+			err: &gridx.DataSizeError{
+				ExpectedBytes: 6,
+				ActualBytes:   1,
+			},
 			want: false,
 		},
 		{
