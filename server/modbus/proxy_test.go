@@ -160,6 +160,7 @@ func startMalformedFc16DownstreamServer(t *testing.T) (addr string, done <-chan 
 
 func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
 	downstreamAddr, done := startMalformedFc16DownstreamServer(t)
+	cfg := modbus.Settings{TolerateMalformedFc16Echo: true}
 
 	// proxy server
 	proxyListener, err := net.Listen("tcp", "localhost:0")
@@ -172,7 +173,7 @@ func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
 	proxy, _ := mbserver.New(&handler{
 		log:                       util.NewLogger("foo"),
 		conn:                      downstreamConn,
-		tolerateMalformedFc16Echo: true,
+		tolerateMalformedFc16Echo: cfg.TolerateMalformedFc16Echo,
 	})
 	require.NoError(t, proxy.Start(proxyListener))
 	defer func() { _ = proxy.Stop() }()
@@ -189,6 +190,7 @@ func TestWriteMultipleRegistersMalformedDownstreamResponse(t *testing.T) {
 
 func TestWriteMultipleRegistersMalformedDownstreamResponseNotTolerated(t *testing.T) {
 	downstreamAddr, done := startMalformedFc16DownstreamServer(t)
+	cfg := modbus.Settings{TolerateMalformedFc16Echo: false}
 
 	// proxy server
 	proxyListener, err := net.Listen("tcp", "localhost:0")
@@ -201,7 +203,7 @@ func TestWriteMultipleRegistersMalformedDownstreamResponseNotTolerated(t *testin
 	proxy, _ := mbserver.New(&handler{
 		log:                       util.NewLogger("foo"),
 		conn:                      downstreamConn,
-		tolerateMalformedFc16Echo: false,
+		tolerateMalformedFc16Echo: cfg.TolerateMalformedFc16Echo,
 	})
 	require.NoError(t, proxy.Start(proxyListener))
 	defer func() { _ = proxy.Stop() }()
